@@ -1,0 +1,17 @@
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup//launch/robot.launch.xml
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup//config/gazebo_bridge.yaml
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/ament_index/resource_index/package_run_dependencies/edge_robot_bringup
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/ament_index/resource_index/parent_prefix_path/edge_robot_bringup
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/environment/ament_prefix_path.sh
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/environment/ament_prefix_path.dsv
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/environment/path.sh
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/environment/path.dsv
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/local_setup.bash
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/local_setup.sh
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/local_setup.zsh
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/local_setup.dsv
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/package.dsv
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/ament_index/resource_index/packages/edge_robot_bringup
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/cmake/edge_robot_bringupConfig.cmake
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/cmake/edge_robot_bringupConfig-version.cmake
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/package.xml
