@@ -7,7 +7,7 @@
 				{
 					"build" : ".",
 					"hasInstallRule" : true,
-					"jsonFile" : "directory-.-dc284fb30a1c0d574573.json",
+					"jsonFile" : "directory-.-6eee5f96d72d0ab970ec.json",
 					"minimumCMakeVersion" : 
 					{
 						"string" : "3.20"
@@ -29,7 +29,7 @@
 					[
 						0
 					],
-					"name" : "edge_robot_description",
+					"name" : "edge_ws",
 					"targetIndexes" : 
 					[
 						0,
@@ -41,15 +41,15 @@
 			[
 				{
 					"directoryIndex" : 0,
-					"id" : "edge_robot_description_uninstall::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-edge_robot_description_uninstall-172d19aac9da938960d5.json",
-					"name" : "edge_robot_description_uninstall",
+					"id" : "edge_ws_uninstall::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-edge_ws_uninstall-406258427c2111ded2d7.json",
+					"name" : "edge_ws_uninstall",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 0,
 					"id" : "uninstall::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-uninstall-d4a9dddbbaf1381fe2ec.json",
+					"jsonFile" : "target-uninstall-7b041941115ff014d2f5.json",
 					"name" : "uninstall",
 					"projectIndex" : 0
 				}
@@ -59,8 +59,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/home/kunal-jazzy/edge_ws/build/edge_robot_description",
-		"source" : "/home/kunal-jazzy/edge_ws/src/edge_robot_description"
+		"build" : "/home/kunal-jazzy/edge_ws/build/edge_ws",
+		"source" : "/home/kunal-jazzy/edge_ws/src/edge_ws"
 	},
 	"version" : 
 	{

@@ -5,7 +5,7 @@
     <xacro:include filename="$(find edge_robot_description)/urdf/rover_base.xacro" />
     <xacro:include filename="$(find edge_robot_description)/urdf/rover_gazebo.xacro"/>
     <!-- <xacro:include filename="$(find edge_robot_description)/urdf/camera.xacro"/> -->
-    <xacro:include filename="$(find edge_robot_description)/urdf/lidar_new.xacro"/>
+    <xacro:include filename="$(find edge_robot_description)/urdf/lidar.xacro"/>
     
     
 </robot>

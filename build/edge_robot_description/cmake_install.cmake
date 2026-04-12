@@ -44,7 +44,6 @@ endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/edge_robot_description/" TYPE DIRECTORY FILES
-    "/home/kunal-jazzy/edge_ws/src/edge_robot_description/launch"
     "/home/kunal-jazzy/edge_ws/src/edge_robot_description/meshes"
     "/home/kunal-jazzy/edge_ws/src/edge_robot_description/rviz"
     "/home/kunal-jazzy/edge_ws/src/edge_robot_description/urdf"

@@ -229,7 +229,6 @@
 			"destination" : "share/edge_robot_description/",
 			"paths" : 
 			[
-				"launch",
 				"meshes",
 				"rviz",
 				"urdf"

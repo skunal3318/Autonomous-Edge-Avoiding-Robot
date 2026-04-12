@@ -1,5 +1,3 @@
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//launch/display.launch.py
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//launch/display.launch.xml
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/wheel_right.stl
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/wheel_left.stl
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/lidar.stl
