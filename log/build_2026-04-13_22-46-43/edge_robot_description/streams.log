@@ -1,0 +1,38 @@
+[0.016s] Invoking command in '/home/kunal-jazzy/edge_ws/build/edge_robot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kunal-jazzy/ROS2-Camera-Visualization/install/four_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/kunal-jazzy/edge_ws/build/edge_robot_description -- -j12 -l12
+[0.063s] Invoked command in '/home/kunal-jazzy/edge_ws/build/edge_robot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kunal-jazzy/ROS2-Camera-Visualization/install/four_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --build /home/kunal-jazzy/edge_ws/build/edge_robot_description -- -j12 -l12
+[0.074s] Invoking command in '/home/kunal-jazzy/edge_ws/build/edge_robot_description': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kunal-jazzy/ROS2-Camera-Visualization/install/four_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/kunal-jazzy/edge_ws/build/edge_robot_description
+[0.081s] -- Install configuration: ""
+[0.081s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes
+[0.082s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL
+[0.082s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/wheel_right.stl
+[0.082s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/wheel_left.stl
+[0.082s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/lidar.stl
+[0.082s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/camera.stl
+[0.082s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/main_frame.stl
+[0.082s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//rviz
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//rviz/urdf_config.rviz
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/common_properties.xacro
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/lidar_new.xacro
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/my_camera.xacro
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/camera.xacro
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/rover.urdf.xacro
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/rover_base.xacro
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/lidar.xacro
+[0.083s] -- Installing: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/rover_gazebo.xacro
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/ament_index/resource_index/package_run_dependencies/edge_robot_description
+[0.083s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/ament_index/resource_index/parent_prefix_path/edge_robot_description
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/environment/ament_prefix_path.sh
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/environment/ament_prefix_path.dsv
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/environment/path.sh
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/environment/path.dsv
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/local_setup.bash
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/local_setup.sh
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/local_setup.zsh
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/local_setup.dsv
+[0.084s] -- Installing: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/package.dsv
+[0.084s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/ament_index/resource_index/packages/edge_robot_description
+[0.085s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/cmake/edge_robot_descriptionConfig.cmake
+[0.085s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/cmake/edge_robot_descriptionConfig-version.cmake
+[0.085s] -- Up-to-date: /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/package.xml
+[0.086s] Invoked command in '/home/kunal-jazzy/edge_ws/build/edge_robot_description' returned '0': CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}:/home/kunal-jazzy/ROS2-Camera-Visualization/install/four_control:/opt/ros/jazzy DEBUGINFOD_URLS=https://debuginfod.ubuntu.com /usr/bin/cmake --install /home/kunal-jazzy/edge_ws/build/edge_robot_description

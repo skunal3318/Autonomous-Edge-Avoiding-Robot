@@ -18,6 +18,6 @@ source ~/edge_ws/install/setup.bash
 
 
 echo "Launching gazebo and Rviz..."
-ros2 launch edge_robot_bringup robot.launch.xml 
+ros2 launch edge_robot_bringup robot.launch.py
 
 wait

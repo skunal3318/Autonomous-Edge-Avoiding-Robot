@@ -54,7 +54,6 @@
       <topic>/scan</topic>
       <update_rate>10</update_rate>
       <always_on>true</always_on>
-      <visualize>false</visualize>
 
       <lidar>
         <scan>

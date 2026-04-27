@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<robot>
+      <gazebo>
+            <plugin filename="gz-sim-diff-drive-system"
+                    name="gz::sim::systems::DiffDrive">
+              <left_joint>left_wheel_joint</left_joint>
+              <right_joint>right_wheel_joint</right_joint>
+              <wheel_separation>${2*s4}</wheel_separation>
+              <wheel_radius>${radius}</wheel_radius>
+              <odom_publish_frequency>20</odom_publish_frequency>
+              <topic>cmd_vel</topic>
+              <odom_topic>odom</odom_topic>
+              <tf_topic>tf</tf_topic>
+              <frame_id>odom</frame_id>
+              <child_frame_id>base_footprint</child_frame_id>
+              <max_linear_acceleration>1.0</max_linear_acceleration>
+            </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
+      <joint_name>left_wheel_joint</joint_name>
+      <joint_name>right_wheel_joint</joint_name>
+      <topic>joint_states</topic>
+    </plugin>
+  </gazebo>
+
+
+</robot>

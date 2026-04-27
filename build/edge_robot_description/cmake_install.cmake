@@ -51,6 +51,18 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/edge_robot_description/meshes" TYPE DIRECTORY FILES "/home/kunal-jazzy/edge_ws/src/edge_robot_description/meshes/")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/edge_robot_description/rviz" TYPE DIRECTORY FILES "/home/kunal-jazzy/edge_ws/src/edge_robot_description/rviz/")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/edge_robot_description/urdf" TYPE DIRECTORY FILES "/home/kunal-jazzy/edge_ws/src/edge_robot_description/urdf/")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/ament_index/resource_index/package_run_dependencies" TYPE FILE FILES "/home/kunal-jazzy/edge_ws/build/edge_robot_description/ament_cmake_index/share/ament_index/resource_index/package_run_dependencies/edge_robot_description")
 endif()
 
