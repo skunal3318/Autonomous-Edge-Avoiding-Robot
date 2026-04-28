@@ -1,6 +1,7 @@
 /home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup//launch/robot.launch.py
-/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup//launch/robot.launch.xml
 /home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup//config/gazebo_bridge.yaml
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup//world/table.sdf
+/home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup//world/indoor_robotics_lab.sdf
 /home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/ament_index/resource_index/package_run_dependencies/edge_robot_bringup
 /home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/ament_index/resource_index/parent_prefix_path/edge_robot_bringup
 /home/kunal-jazzy/edge_ws/install/edge_robot_bringup/share/edge_robot_bringup/environment/ament_prefix_path.sh

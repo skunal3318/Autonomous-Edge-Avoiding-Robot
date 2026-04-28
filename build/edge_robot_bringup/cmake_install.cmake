@@ -46,6 +46,7 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/edge_robot_bringup/" TYPE DIRECTORY FILES
     "/home/kunal-jazzy/edge_ws/src/edge_robot_bringup/launch"
     "/home/kunal-jazzy/edge_ws/src/edge_robot_bringup/config"
+    "/home/kunal-jazzy/edge_ws/src/edge_robot_bringup/world"
     )
 endif()
 

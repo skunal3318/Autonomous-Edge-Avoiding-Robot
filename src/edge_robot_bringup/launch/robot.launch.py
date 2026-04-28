@@ -23,6 +23,11 @@ def generate_launch_description():
         value_type=str
     )
 
+    pkg_path = get_package_share_directory('edge_robot_bringup')
+
+    world_path = os.path.join(pkg_path, 'world', 'indoor_robotics_lab.sdf')
+
+
     gazeboLaunch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
@@ -32,7 +37,7 @@ def generate_launch_description():
             )
         ),
         launch_arguments={
-            'gz_args': '-r -v -v4 empty.sdf',
+            'gz_args': f'-r -v -v4 {world_path}',
             'on_exit_shutdown': 'true'
         }.items()
     )
@@ -52,16 +57,23 @@ def generate_launch_description():
         executable='create',
         arguments=[
             '-name', robotName,
-            '-topic', 'robot_description'
+            '-topic', '/robot_description',
+            '-x', "0",
+            '-y', '0',
+            '-z', '0.26',
         ],
         output='screen'
     )
 
+    # joint_state_gui = Node(
+    #     package='joint_state_publisher_gui',
+    #     executable='joint_state_publisher_gui'
+    # )
 
     rviz_config = os.path.join(
         get_package_share_directory(namePackage),
         'rviz',
-        'urdf_config.rviz'
+        'visualization_config.rviz'
     )
 
     rviz = Node(

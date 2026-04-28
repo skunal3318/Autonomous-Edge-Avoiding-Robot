@@ -1,9 +1,5 @@
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/wheel_right.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/wheel_left.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/lidar.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/camera.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//meshes/STL/main_frame.stl
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//rviz/urdf_config.rviz
+/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//rviz/visualization_config.rviz
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/parts/wheels/wheels.gazebo.xacro
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/parts/wheels/wheels.xacro
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/parts/base/base_link.xacro
@@ -12,12 +8,8 @@
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/parts/lidar/lidar.xacro
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/model_gazebo.xacro
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description//urdf/model.xacro
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/meshes/STL/wheel_right.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/meshes/STL/wheel_left.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/meshes/STL/lidar.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/meshes/STL/camera.stl
-/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/meshes/STL/main_frame.stl
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/rviz/urdf_config.rviz
+/home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/rviz/visualization_config.rviz
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/urdf/parts/wheels/wheels.gazebo.xacro
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/urdf/parts/wheels/wheels.xacro
 /home/kunal-jazzy/edge_ws/install/edge_robot_description/share/edge_robot_description/urdf/parts/base/base_link.xacro
