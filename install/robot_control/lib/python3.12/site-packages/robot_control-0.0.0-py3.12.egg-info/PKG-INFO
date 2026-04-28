@@ -1,0 +1,9 @@
+Metadata-Version: 2.1
+Name: robot-control
+Version: 0.0.0
+Summary: TODO: Package description
+Maintainer: kunal-jazzy
+Maintainer-email: kunal780954@gmail.com
+License: BSD-3-Clause
+Provides-Extra: test
+License-File: LICENSE
