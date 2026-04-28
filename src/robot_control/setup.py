@@ -15,7 +15,7 @@ setup(
     zip_safe=True,
     maintainer='kunal-jazzy',
     maintainer_email='kunal780954@gmail.com',
-    description='TODO: Package description',
+    description='Control package',
     license='BSD-3-Clause',
     extras_require={
         'test': [
@@ -24,6 +24,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'edge_avoid = robot_control.edge_avoid:main',
         ],
     },
 )
