@@ -1,0 +1,20 @@
+[0.741s] Invoking command in '/home/kunal-jazzy/edge_ws/src/robot_control': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/kunal-jazzy/edge_ws/build/robot_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_control build --build-base /home/kunal-jazzy/edge_ws/build/robot_control/build install --record /home/kunal-jazzy/edge_ws/build/robot_control/install.log --single-version-externally-managed install_data
+[0.922s] running egg_info
+[0.935s] writing ../../build/robot_control/robot_control.egg-info/PKG-INFO
+[0.935s] writing dependency_links to ../../build/robot_control/robot_control.egg-info/dependency_links.txt
+[0.935s] writing entry points to ../../build/robot_control/robot_control.egg-info/entry_points.txt
+[0.936s] writing requirements to ../../build/robot_control/robot_control.egg-info/requires.txt
+[0.936s] writing top-level names to ../../build/robot_control/robot_control.egg-info/top_level.txt
+[0.962s] reading manifest file '../../build/robot_control/robot_control.egg-info/SOURCES.txt'
+[0.963s] adding license file 'LICENSE'
+[0.963s] writing manifest file '../../build/robot_control/robot_control.egg-info/SOURCES.txt'
+[0.963s] running build
+[0.963s] running build_py
+[0.963s] copying robot_control/edge_avoid.py -> /home/kunal-jazzy/edge_ws/build/robot_control/build/lib/robot_control
+[0.963s] running install
+[0.968s] running install_lib
+[0.981s] copying /home/kunal-jazzy/edge_ws/build/robot_control/build/lib/robot_control/edge_avoid.py -> /home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control
+[0.981s] byte-compiling /home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control/edge_avoid.py to edge_avoid.cpython-312.pyc
+[0.981s] running install_data
+[0.982s] error: can't copy 'resource/robot_control': doesn't exist or not a regular file
+[0.996s] Invoked command in '/home/kunal-jazzy/edge_ws/src/robot_control' returned '1': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/kunal-jazzy/edge_ws/build/robot_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_control build --build-base /home/kunal-jazzy/edge_ws/build/robot_control/build install --record /home/kunal-jazzy/edge_ws/build/robot_control/install.log --single-version-externally-managed install_data

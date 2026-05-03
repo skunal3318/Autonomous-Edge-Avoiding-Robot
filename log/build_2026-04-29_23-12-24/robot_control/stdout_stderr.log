@@ -1,0 +1,28 @@
+running egg_info
+writing ../../build/robot_control/robot_control.egg-info/PKG-INFO
+writing dependency_links to ../../build/robot_control/robot_control.egg-info/dependency_links.txt
+writing entry points to ../../build/robot_control/robot_control.egg-info/entry_points.txt
+writing requirements to ../../build/robot_control/robot_control.egg-info/requires.txt
+writing top-level names to ../../build/robot_control/robot_control.egg-info/top_level.txt
+reading manifest file '../../build/robot_control/robot_control.egg-info/SOURCES.txt'
+adding license file 'LICENSE'
+writing manifest file '../../build/robot_control/robot_control.egg-info/SOURCES.txt'
+running build
+running build_py
+copying robot_control/__init__.py -> /home/kunal-jazzy/edge_ws/build/robot_control/build/lib/robot_control
+copying robot_control/edge_avoid.py -> /home/kunal-jazzy/edge_ws/build/robot_control/build/lib/robot_control
+running install
+running install_lib
+copying /home/kunal-jazzy/edge_ws/build/robot_control/build/lib/robot_control/__init__.py -> /home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control
+copying /home/kunal-jazzy/edge_ws/build/robot_control/build/lib/robot_control/edge_avoid.py -> /home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control
+byte-compiling /home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control/__init__.py to __init__.cpython-312.pyc
+byte-compiling /home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control/edge_avoid.py to edge_avoid.cpython-312.pyc
+running install_data
+copying resource/robot_control -> /home/kunal-jazzy/edge_ws/install/robot_control/share/ament_index/resource_index/packages
+copying package.xml -> /home/kunal-jazzy/edge_ws/install/robot_control/share/robot_control
+running install_egg_info
+removing '/home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control-0.0.0-py3.12.egg-info' (and everything under it)
+Copying ../../build/robot_control/robot_control.egg-info to /home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages/robot_control-0.0.0-py3.12.egg-info
+running install_scripts
+Installing edge_avoid script to /home/kunal-jazzy/edge_ws/install/robot_control/lib/robot_control
+writing list of installed files to '/home/kunal-jazzy/edge_ws/build/robot_control/install.log'

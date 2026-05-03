@@ -1,43 +1,41 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <gazebo>
-        <plugin filename="gz-sim-sensors-system" name="gz::sim::systems::Sensors">
-            <render_engine>ogre2</render_engine>
-        </plugin>
-    </gazebo>
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <topic>scan/points</topic>
+      <update_rate>20</update_rate>
 
-    <gazebo reference="lidar_link">
-        <sensor name="gpu_lidar" type="gpu_lidar">
-            <pose relative_to='lidar_link'>0 0 0 0 0 0</pose>
+      <!-- This MUST match the link name in your URDF exactly -->
+      <gz_frame_id>lidar_link</gz_frame_id>
 
-            <topic>scan</topic>
-            <update_rate>1</update_rate>
-
-            <lidar>
-                <scan>
-                    <horizontal>
-                        <samples>720</samples>
-                        <resolution>1</resolution>
-                        <min_angle>-3.14</min_angle>
-                        <max_angle>3.14</max_angle>
-                    </horizontal>
-                </scan>
-
-                <range>
-                    <min>0.01</min>
-                    <max>12.0</max>
-                    <resolution>0.0005</resolution>
-                </range>
-
-                <noise>
-                    <type>gaussian</type>
-                    <mean>0.0</mean>
-                    <stddev>0.001</stddev>
-                </noise>
-            </lidar>
-
-            <always_on>1</always_on>
-            <visualize>1</visualize>
-        </sensor>
-    </gazebo>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159265</min_angle>
+            <max_angle>3.14159265</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>16</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.5236</min_angle>
+            <max_angle>0.1745</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.08</min>
+          <max>4.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+    </sensor>
+  </gazebo>
 </robot>

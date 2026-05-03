@@ -1,0 +1,2 @@
+[console_scripts]
+edge_avoid = robot_control.edge_avoid:main

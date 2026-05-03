@@ -24,6 +24,7 @@ function _colcon_prefix_chain_powershell_source_script {
 # source chained prefixes
 _colcon_prefix_chain_powershell_source_script "/opt/ros/jazzy\local_setup.ps1"
 _colcon_prefix_chain_powershell_source_script "/home/kunal-jazzy/ros2_arm/install\local_setup.ps1"
+_colcon_prefix_chain_powershell_source_script "/home/kunal-jazzy/nav_ws/install\local_setup.ps1"
 _colcon_prefix_chain_powershell_source_script "/home/kunal-jazzy/ros2_ws/install\local_setup.ps1"
 _colcon_prefix_chain_powershell_source_script "/home/kunal-jazzy/ROS2-Camera-Visualization/install\local_setup.ps1"
 

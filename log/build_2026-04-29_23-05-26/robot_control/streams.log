@@ -1,0 +1,17 @@
+[0.598s] Invoking command in '/home/kunal-jazzy/edge_ws/src/robot_control': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/kunal-jazzy/edge_ws/build/robot_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_control build --build-base /home/kunal-jazzy/edge_ws/build/robot_control/build install --record /home/kunal-jazzy/edge_ws/build/robot_control/install.log --single-version-externally-managed install_data
+[0.788s] running egg_info
+[0.805s] writing ../../build/robot_control/robot_control.egg-info/PKG-INFO
+[0.805s] writing dependency_links to ../../build/robot_control/robot_control.egg-info/dependency_links.txt
+[0.805s] writing entry points to ../../build/robot_control/robot_control.egg-info/entry_points.txt
+[0.805s] writing requirements to ../../build/robot_control/robot_control.egg-info/requires.txt
+[0.806s] writing top-level names to ../../build/robot_control/robot_control.egg-info/top_level.txt
+[0.834s] reading manifest file '../../build/robot_control/robot_control.egg-info/SOURCES.txt'
+[0.834s] adding license file 'LICENSE'
+[0.835s] writing manifest file '../../build/robot_control/robot_control.egg-info/SOURCES.txt'
+[0.835s] running build
+[0.835s] running build_py
+[0.835s] running install
+[0.840s] running install_lib
+[0.854s] error: can't copy 'resource/robot_control': doesn't exist or not a regular file
+[0.855s] running install_data
+[0.870s] Invoked command in '/home/kunal-jazzy/edge_ws/src/robot_control' returned '1': DEBUGINFOD_URLS=https://debuginfod.ubuntu.com PYTHONPATH=/home/kunal-jazzy/edge_ws/build/robot_control/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/kunal-jazzy/edge_ws/install/robot_control/lib/python3.12/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py egg_info --egg-base ../../build/robot_control build --build-base /home/kunal-jazzy/edge_ws/build/robot_control/build install --record /home/kunal-jazzy/edge_ws/build/robot_control/install.log --single-version-externally-managed install_data
