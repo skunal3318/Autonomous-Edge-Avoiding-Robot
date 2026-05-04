@@ -48,10 +48,259 @@
             <inertia ixx="${I_wheel}" ixy="0.0" ixz="0.0" iyy="${I_wheel}" iyz="0.0" izz="${Iz_wheel}"/>
         </inertial>
     </xacro:macro>
+
+    <link name="base_footprint"> </link>
+    <joint name="base_link_joint" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+    </joint>
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 ${s1}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${length} ${breadth} ${height}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 ${s1}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${length} ${breadth} ${height}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_body />
+    </link>
+
+    <gazebo reference="base_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <!-- LIDAR  -->
+
+    <link name="lidar_link">
+        <visual>
+            <origin xyz="0.0 0.0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.1"/>
+            </geometry>
+        </visual>
+
+        <collision name='collision'>
+            <origin xyz="0.0 0.0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.1"/>
+            </geometry>
+        </collision>
+    </link>
+    <joint name="lidar_joint" type="fixed">
+        <origin xyz="0 0 ${height+radius}"/>
+        <parent link="base_link"/>
+        <child link="lidar_link"/>
+        <axis xyz="0 1 0" rpy="0 0 0" />
+    </joint>
+
+  <gazebo reference="lidar_link">
+    <sensor name="lidar" type="gpu_lidar">
+      <topic>scan/points</topic>
+      <update_rate>20</update_rate>
+
+      <!-- This MUST match the link name in your URDF exactly -->
+      <gz_frame_id>lidar_link</gz_frame_id>
+
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159265</min_angle>
+            <max_angle>3.14159265</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>16</samples>
+            <resolution>1</resolution>
+            <min_angle>-0.5236</min_angle>
+            <max_angle>0.1745</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.08</min>
+          <max>4.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+    </sensor>
+  </gazebo>
     
-    <xacro:include filename="$(find edge_robot_description)/urdf/parts/base/base_link.xacro"/>
-    <xacro:include filename="$(find edge_robot_description)/urdf/parts/lidar/lidar.xacro"/>
-    <xacro:include filename="$(find edge_robot_description)/urdf/parts/wheels/wheels.xacro"/>
-    <xacro:include filename="$(find edge_robot_description)/urdf/model_gazebo.xacro"/>
+
+    <link name="left_wheel_link">
+        <visual>
+            <origin xyz="0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+
+        <xacro:inertia_wheel />
+    </link>
+
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="left_wheel_link"/>
+        <origin xyz="${-s2} ${-s4} ${radius}" rpy="0 0 0" /> 
+        <axis xyz="0 1 0" />
+        <limit effort="50000" velocity="10"/> 
+        <dynamics damping="1.0" friction="1.0" />
+    </joint>
+
+    <link name="right_wheel_link">
+        <visual>
+            <origin xyz="0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel />
+    </link>
+
+
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="right_wheel_link"/>
+        <origin xyz="${-s2} ${s4} ${radius}" rpy="0.0 0.0 0.0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="50000" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0" />
+    </joint>
+
+
+    <!-- Caster wheels  -->
+     <link name="caster1_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel />
+    </link>
+
+    <joint name="caster1_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="caster1_link"/>
+        <origin xyz="${s2} ${-s4} ${radius}" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+        <limit effort="50000" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0" />
+    </joint>
+
+
+    <link name="caster2_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+
+        <collision>
+            <origin xyz="0 0 0" rpy="1.570795 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel />
+    </link>
+
+    <joint name="caster2_joint" type="fixed">
+        <parent link="base_link"/>
+        <child link="caster2_link"/>
+        <origin xyz="${s2} ${s4} ${radius}" rpy="0 0 0" />
+        <axis xyz="0 1 0"/>
+        <limit effort="50000" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0" />
+    </joint>
+
+
+    <gazebo reference="d1_wheel_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/Yellow</material>
+    </gazebo>
+
+    <gazebo reference="d2_wheel_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/Yellow</material>
+    </gazebo>
+    
+    <gazebo reference="caster1_link">
+        <mu1>0.000002</mu1>
+        <mu2>0.000002</mu2>
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <gazebo reference="caster2_link">
+        <mu1>0.000002</mu1>
+        <mu2>0.000002</mu2>
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+      <gazebo>
+            <plugin filename="gz-sim-diff-drive-system"
+                    name="gz::sim::systems::DiffDrive">
+              <left_joint>left_wheel_joint</left_joint>
+              <right_joint>right_wheel_joint</right_joint>
+              <wheel_separation>${2*s4}</wheel_separation>
+              <wheel_radius>${radius}</wheel_radius>
+              <odom_publish_frequency>20</odom_publish_frequency>
+              <topic>cmd_vel</topic>
+              <odom_topic>odom</odom_topic>
+              <tf_topic>tf</tf_topic>
+              <frame_id>odom</frame_id>
+              <child_frame_id>base_footprint</child_frame_id>
+              <max_linear_acceleration>1.0</max_linear_acceleration>
+            </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin filename="gz-sim-joint-state-publisher-system"
+            name="gz::sim::systems::JointStatePublisher">
+      <joint_name>left_wheel_joint</joint_name>
+      <joint_name>right_wheel_joint</joint_name>
+      <topic>joint_states</topic>
+    </plugin>
+  </gazebo>
+
 
 </robot>
