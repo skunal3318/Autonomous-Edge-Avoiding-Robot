@@ -1,57 +1,373 @@
 <?xml version="1.0"?>
 <robot name="edge_robot" xmlns:xacro="https://www.ros.org/wiki/xacro">
 
-    <xacro:property name="pi_const" value="3.14150265" />
-    
-    <xacro:property name="length" value="1"/>
-    <xacro:property name="height" value="0.3" />
-    <xacro:property name="breadth" value="0.6" />
-    
+    <!-- ============================================================
+         CONSTANTS & GEOMETRY
+    ============================================================ -->
+    <xacro:property name="pi_const" value="3.14159265" />   <!-- FIX: was 3.14150265 -->
+
+    <!-- Body dimensions -->
+    <xacro:property name="length"  value="1.0"  />
+    <xacro:property name="height"  value="0.3"  />
+    <xacro:property name="breadth" value="0.6"  />
+
+    <!-- Wheel dimensions -->
     <xacro:property name="radius" value="0.15" />
-    <xacro:property name="d" value="0.1" />
-    
-    <xacro:property name="s1" value="${(height/2)+radius}" />
-    <xacro:property name="s2" value="${2*radius}" />
-    <xacro:property name="s3" value="${2*radius}" />
-    <xacro:property name="s4" value="${breadth/2 + d/2}" />
-    
-    
-    <!-- Densitites -->
-    <xacro:property name="d1" value="2710.0" />
-    <xacro:property name="d2" value="2710.0" />
-    
-    <!-- Mass  -->
-    <xacro:property name="m1" value="${d1*length*breadth*height}" />
-    <xacro:property name="m2" value="${d2*pi_const*radius*radius*d}" />
-    
-    <!-- Inertia   -->
-    <!-- Box   -->
-    <xacro:property name="Ix_box" value="${(1/12)*m1*(height*height+breadth*breadth)}"/>
-    <xacro:property name="Iy_box" value="${(1/12)*m1*(length*length+height*height)}"/>
-    <xacro:property name="Iz_box" value="${(1/12)*m1*(length*length+breadth*breadth)}"/>
-    
-    <xacro:property name="Iz_wheel" value="${0.5*m2*radius*radius}"/>
-    <xacro:property name="I_wheel" value="${(1.0/12.0)*m2*(3.0*radius*radius+d*d)}"/>
-    
+    <xacro:property name="d"      value="0.1"  />
+
+    <!--
+        Coordinate convention
+        ─────────────────────
+        Ground plane  : z = 0
+        Wheel centre  : z = radius = 0.15
+        Body centre Z : z = radius + height/2  = 0.15 + 0.15 = 0.30
+        Body top   Z  : z = radius + height     = 0.15 + 0.30 = 0.45
+
+        Drive wheels  sit at x = -(length/2 - radius)  (rear)
+        Caster wheels sit at x = +(length/2 - radius)  (front)
+        Both sides    sit at y = ±(breadth/2 + d/2)
+    -->
+    <xacro:property name="body_z"     value="${radius + height/2}"        />  <!-- 0.30 -->
+    <xacro:property name="body_top_z" value="${radius + height}"           />  <!-- 0.45 -->
+    <xacro:property name="wheel_x"    value="${length/2 - radius}"         />  <!-- 0.35 — FIX: was 2*radius=0.30 which ignored body length -->
+    <xacro:property name="wheel_y"    value="${breadth/2 + d/2}"           />  <!-- 0.35 -->
+
+    <!-- ============================================================
+         MASS & INERTIA
+    ============================================================ -->
+    <xacro:property name="density_body"  value="2710.0" />
+    <xacro:property name="density_wheel" value="2710.0" />
+
+    <xacro:property name="m_body"  value="${density_body  * length * breadth * height}" />
+    <xacro:property name="m_wheel" value="${density_wheel * pi_const * radius * radius * d}" />
+
+    <!-- Box inertia (about body CoM) -->
+    <xacro:property name="Ix_box" value="${(1.0/12.0)*m_body*(height*height + breadth*breadth)}" />
+    <xacro:property name="Iy_box" value="${(1.0/12.0)*m_body*(length*length + height*height)}"  />
+    <xacro:property name="Iz_box" value="${(1.0/12.0)*m_body*(length*length + breadth*breadth)}" />
+
+    <!-- Cylinder inertia (wheel spinning about its Y axis) -->
+    <xacro:property name="Iz_wheel" value="${0.5  * m_wheel * radius * radius}"                   />  <!-- spin axis -->
+    <xacro:property name="I_wheel"  value="${(1.0/12.0)*m_wheel*(3.0*radius*radius + d*d)}"       />  <!-- transverse -->
+
+    <!-- Small inertia for lidar (0.2 kg solid cylinder r=0.1 l=0.1) -->
+    <xacro:property name="m_lidar"    value="0.2"                                           />
+    <xacro:property name="Iz_lidar"   value="${0.5  * m_lidar * 0.1 * 0.1}"                 />
+    <xacro:property name="Ixy_lidar"  value="${(1.0/12.0)*m_lidar*(3.0*0.1*0.1 + 0.1*0.1)}" />
+
+    <!-- ============================================================
+         INERTIA MACROS
+    ============================================================ -->
     <xacro:macro name="inertia_body">
         <inertial>
-            <origin rpy="0.0 0.0 0.0" xyz="0 0 ${s1}"/>
-            <mass value="${m1}"/>
-            <inertia ixx="${Ix_box}" ixy="0.0" ixz="0.0" iyy="${Iy_box}" iyz="0.0" izz="${Iz_box}"/>
+            <!-- CoM is at body centre = height/2 above base_link origin -->
+            <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
+            <mass value="${m_body}"/>
+            <inertia ixx="${Ix_box}" ixy="0.0" ixz="0.0"
+                     iyy="${Iy_box}" iyz="0.0"
+                     izz="${Iz_box}"/>
         </inertial>
     </xacro:macro>
-    
+
     <xacro:macro name="inertia_wheel">
         <inertial>
-            <origin xyz="0.0 0.0 0.0" rpy="1.570795 0.0 0.0"/>
-            <mass value="${m2}"/>
-            <inertia ixx="${I_wheel}" ixy="0.0" ixz="0.0" iyy="${I_wheel}" iyz="0.0" izz="${Iz_wheel}"/>
+            <!-- CoM at wheel centre; inertia tensor in link frame -->
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${m_wheel}"/>
+            <!--
+                Joint axis is xyz="0 1 0" (Y axis = spin axis).
+                Inertia is expressed in the *link* frame (not rotated).
+                For a cylinder whose axis is Y:
+                  iyy = Iz_wheel  (spin axis, 0.5*m*r^2)
+                  ixx = izz = I_wheel  (transverse, m/12*(3r²+h²))
+            -->
+            <inertia ixx="${I_wheel}"  ixy="0.0" ixz="0.0"
+                     iyy="${Iz_wheel}" iyz="0.0"
+                     izz="${I_wheel}"/>
         </inertial>
     </xacro:macro>
-    
-    <xacro:include filename="$(find edge_robot_description)/urdf/parts/base/base_link.xacro"/>
-    <xacro:include filename="$(find edge_robot_description)/urdf/parts/lidar/lidar.xacro"/>
-    <xacro:include filename="$(find edge_robot_description)/urdf/parts/wheels/wheels.xacro"/>
-    <xacro:include filename="$(find edge_robot_description)/urdf/model_gazebo.xacro" />
+
+    <xacro:macro name="inertia_lidar">
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="${m_lidar}"/>
+            <inertia ixx="${Ixy_lidar}" ixy="0.0" ixz="0.0"
+                     iyy="${Ixy_lidar}" iyz="0.0"
+                     izz="${Iz_lidar}"/>
+        </inertial>
+    </xacro:macro>
+
+    <!-- ============================================================
+         BASE FOOTPRINT  (ground-plane reference frame)
+    ============================================================ -->
+    <link name="base_footprint"/>
+
+    <!-- Lift base_link by wheel_radius so wheels touch z=0 (Nav2 convention).
+         base_link origin is at wheel-axle height; body visual is centred at
+         z = height/2 above that, so body top = wheel_radius + height. -->
+    <joint name="base_link_joint" type="fixed">
+        <origin xyz="0 0 ${radius}" rpy="0 0 0"/>
+        <parent link="base_footprint"/>
+        <child  link="base_link"/>
+    </joint>
+
+    <!-- ============================================================
+         BASE LINK  (robot body)
+         With the joint lifting base_link by 'radius', the body visual
+         origin is just height/2 above the base_link frame centre.
+    ============================================================ -->
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${length} ${breadth} ${height}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${length} ${breadth} ${height}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_body/>
+    </link>
+
+    <gazebo reference="base_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+    <!-- ============================================================
+         LIDAR
+         Joint origin is on top of the body (body_top_z in base_link frame).
+         The lidar visual/collision is then offset +0.05 m in Z (sits on top).
+    ============================================================ -->
+    <link name="lidar_link">
+        <visual>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.1"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.1" length="0.1"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_lidar/>   <!-- FIX: added missing inertial block -->
+    </link>
+
+    <!-- Lidar joint: body top is at height above base_link origin.
+         Visual is offset +0.05 inside lidar_link (cylinder sits on top of body). -->
+    <joint name="lidar_joint" type="fixed">
+        <origin xyz="0 0 ${height}" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child  link="lidar_link"/>
+    </joint>
+
+    <gazebo reference="lidar_link">
+        <sensor name="lidar" type="gpu_lidar">
+            <topic>scan/points</topic>
+            <update_rate>20</update_rate>
+            <gz_frame_id>lidar_link</gz_frame_id>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14159265</min_angle>
+                        <max_angle>3.14159265</max_angle>
+                    </horizontal>
+                    <vertical>
+                        <samples>16</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-0.5236</min_angle>
+                        <max_angle>0.1745</max_angle>
+                    </vertical>
+                </scan>
+                <range>
+                    <min>0.08</min>
+                    <max>4.0</max>
+                    <resolution>0.01</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </lidar>
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+        </sensor>
+    </gazebo>
+
+    <!-- ============================================================
+         LEFT DRIVE WHEEL  (rear-left)
+    ============================================================ -->
+    <link name="left_wheel_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <!-- FIX: x was -s2 (= -2*radius = -0.30) — wheels were bunched near centre.
+              Now x = -wheel_x = -(length/2 - radius) = -0.35 (rear of body).
+              y = -wheel_y (left side, negative Y in ROS convention). -->
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child  link="left_wheel_link"/>
+        <origin xyz="${-wheel_x} ${-wheel_y} 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="50000" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+
+    <gazebo reference="left_wheel_link">   <!-- FIX: was d1_wheel_link (non-existent) -->
+        <mu1>0.8</mu1>
+        <mu2>0.8</mu2>
+        <material>Gazebo/Yellow</material>
+    </gazebo>
+
+    <!-- ============================================================
+         RIGHT DRIVE WHEEL  (rear-right)
+    ============================================================ -->
+    <link name="right_wheel_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child  link="right_wheel_link"/>
+        <origin xyz="${-wheel_x} ${wheel_y} 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="50000" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+
+    <gazebo reference="right_wheel_link">  <!-- FIX: was d2_wheel_link (non-existent) -->
+        <mu1>0.8</mu1>
+        <mu2>0.8</mu2>
+        <material>Gazebo/Yellow</material>
+    </gazebo>
+
+    <!-- ============================================================
+         FRONT-LEFT CASTER WHEEL
+         Fixed joint + near-zero friction = free-spinning behaviour.
+         FIX: removed <limit> and <dynamics> which are invalid on fixed joints.
+    ============================================================ -->
+    <link name="caster1_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <joint name="caster1_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="caster1_link"/>
+        <origin xyz="${wheel_x} ${-wheel_y} 0" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="caster1_link">
+        <mu1>0.000002</mu1>
+        <mu2>0.000002</mu2>
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <!-- ============================================================
+         FRONT-RIGHT CASTER WHEEL
+    ============================================================ -->
+    <link name="caster2_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <joint name="caster2_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="caster2_link"/>
+        <origin xyz="${wheel_x} ${wheel_y} 0" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="caster2_link">
+        <mu1>0.000002</mu1>
+        <mu2>0.000002</mu2>
+        <material>Gazebo/Blue</material>
+    </gazebo>
+
+    <!-- ============================================================
+         DIFF-DRIVE PLUGIN
+    ============================================================ -->
+    <gazebo>
+        <plugin filename="gz-sim-diff-drive-system"
+                name="gz::sim::systems::DiffDrive">
+            <left_joint>left_wheel_joint</left_joint>
+            <right_joint>right_wheel_joint</right_joint>
+            <wheel_separation>${2*wheel_y}</wheel_separation>
+            <wheel_radius>${radius}</wheel_radius>
+            <odom_publish_frequency>20</odom_publish_frequency>
+            <topic>cmd_vel</topic>
+            <odom_topic>odom</odom_topic>
+            <tf_topic>tf</tf_topic>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_footprint</child_frame_id>
+            <max_linear_acceleration>1.0</max_linear_acceleration>
+        </plugin>
+    </gazebo>
+
+    <!-- ============================================================
+         JOINT STATE PUBLISHER PLUGIN
+    ============================================================ -->
+    <gazebo>
+        <plugin filename="gz-sim-joint-state-publisher-system"
+                name="gz::sim::systems::JointStatePublisher">
+            <joint_name>left_wheel_joint</joint_name>
+            <joint_name>right_wheel_joint</joint_name>
+            <topic>joint_states</topic>
+        </plugin>
+    </gazebo>
 
 </robot>
