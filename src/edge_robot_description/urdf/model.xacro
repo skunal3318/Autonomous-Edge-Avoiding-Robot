@@ -107,11 +107,9 @@
                 <cylinder radius="0.1" length="0.1"/>
             </geometry>
         </collision>
-        <xacro:inertia_lidar/>   <!-- FIX: added missing inertial block -->
+        <xacro:inertia_lidar/>  
     </link>
 
-    <!-- Lidar joint: body top is at height above base_link origin.
-         Visual is offset +0.05 inside lidar_link (cylinder sits on top of body). -->
     <joint name="lidar_joint" type="fixed">
         <origin xyz="0 0 ${height}" rpy="0 -0.35 0"/>
         <parent link="base_link"/>
@@ -129,7 +127,6 @@
             <samples>360</samples>
             <resolution>1</resolution>
             <min_angle>-3.14159265</min_angle>
-            <!-- FIX #4: Corrected max_angle typo (was 3.141459265, missing '5' digit) -->
             <max_angle>3.14159265</max_angle>
           </horizontal>
         </scan>
