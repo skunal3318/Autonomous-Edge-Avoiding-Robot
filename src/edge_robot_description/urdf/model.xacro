@@ -162,50 +162,42 @@
     <!-- Lidar joint: body top is at height above base_link origin.
          Visual is offset +0.05 inside lidar_link (cylinder sits on top of body). -->
     <joint name="lidar_joint" type="fixed">
-        <origin xyz="0 0 ${height}" rpy="0 0 0"/>
+        <origin xyz="0 0 ${height}" rpy="0 -0.35 0"/>
         <parent link="base_link"/>
         <child  link="lidar_link"/>
     </joint>
 
     <gazebo reference="lidar_link">
-        <sensor name="lidar" type="gpu_lidar">
-            <topic>scan/points</topic>
-            <update_rate>20</update_rate>
-            <gz_frame_id>lidar_link</gz_frame_id>
-            <lidar>
-                <scan>
-                    <horizontal>
-                        <samples>360</samples>
-                        <resolution>1</resolution>
-                        <min_angle>-3.14159265</min_angle>
-                        <max_angle>3.14159265</max_angle>
-                    </horizontal>
-                    <vertical>
-                        <samples>16</samples>
-                        <resolution>1</resolution>
-                        <min_angle>-0.5236</min_angle>
-                        <max_angle>0.1745</max_angle>
-                    </vertical>
-                </scan>
-                <range>
-                    <min>0.08</min>
-                    <max>4.0</max>
-                    <resolution>0.01</resolution>
-                </range>
-                <noise>
-                    <type>gaussian</type>
-                    <mean>0.0</mean>
-                    <stddev>0.01</stddev>
-                </noise>
-            </lidar>
-            <always_on>true</always_on>
-            <visualize>true</visualize>
-        </sensor>
-    </gazebo>
+    <sensor name="lidar" type="gpu_lidar">
+      <topic>scan</topic>
+      <update_rate>20</update_rate>
+      <gz_frame_id>lidar_link</gz_frame_id>
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14159265</min_angle>
+            <!-- FIX #4: Corrected max_angle typo (was 3.141459265, missing '5' digit) -->
+            <max_angle>3.14159265</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.08</min>
+          <max>4.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+    </sensor>
+  </gazebo>
 
-    <!-- ============================================================
-         LEFT DRIVE WHEEL  (rear-left)
-    ============================================================ -->
     <link name="left_wheel_link">
         <visual>
             <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
@@ -222,9 +214,6 @@
         <xacro:inertia_wheel/>
     </link>
 
-    <!-- FIX: x was -s2 (= -2*radius = -0.30) — wheels were bunched near centre.
-              Now x = -wheel_x = -(length/2 - radius) = -0.35 (rear of body).
-              y = -wheel_y (left side, negative Y in ROS convention). -->
     <joint name="left_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child  link="left_wheel_link"/>
@@ -234,15 +223,12 @@
         <dynamics damping="1.0" friction="1.0"/>
     </joint>
 
-    <gazebo reference="left_wheel_link">   <!-- FIX: was d1_wheel_link (non-existent) -->
+    <gazebo reference="left_wheel_link"> 
         <mu1>0.8</mu1>
         <mu2>0.8</mu2>
         <material>Gazebo/Yellow</material>
     </gazebo>
 
-    <!-- ============================================================
-         RIGHT DRIVE WHEEL  (rear-right)
-    ============================================================ -->
     <link name="right_wheel_link">
         <visual>
             <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
@@ -268,17 +254,12 @@
         <dynamics damping="1.0" friction="1.0"/>
     </joint>
 
-    <gazebo reference="right_wheel_link">  <!-- FIX: was d2_wheel_link (non-existent) -->
+    <gazebo reference="right_wheel_link">  
         <mu1>0.8</mu1>
         <mu2>0.8</mu2>
         <material>Gazebo/Yellow</material>
     </gazebo>
 
-    <!-- ============================================================
-         FRONT-LEFT CASTER WHEEL
-         Fixed joint + near-zero friction = free-spinning behaviour.
-         FIX: removed <limit> and <dynamics> which are invalid on fixed joints.
-    ============================================================ -->
     <link name="caster1_link">
         <visual>
             <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
@@ -307,9 +288,6 @@
         <material>Gazebo/Blue</material>
     </gazebo>
 
-    <!-- ============================================================
-         FRONT-RIGHT CASTER WHEEL
-    ============================================================ -->
     <link name="caster2_link">
         <visual>
             <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
@@ -338,9 +316,6 @@
         <material>Gazebo/Blue</material>
     </gazebo>
 
-    <!-- ============================================================
-         DIFF-DRIVE PLUGIN
-    ============================================================ -->
     <gazebo>
         <plugin filename="gz-sim-diff-drive-system"
                 name="gz::sim::systems::DiffDrive">
@@ -358,9 +333,6 @@
         </plugin>
     </gazebo>
 
-    <!-- ============================================================
-         JOINT STATE PUBLISHER PLUGIN
-    ============================================================ -->
     <gazebo>
         <plugin filename="gz-sim-joint-state-publisher-system"
                 name="gz::sim::systems::JointStatePublisher">

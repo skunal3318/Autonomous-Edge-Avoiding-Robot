@@ -100,6 +100,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    edge_node = Node(
+        package='robot_control',
+        executable='edge_avoid',
+        name='edge_avoid',
+        output='screen',
+    )
+
     return LaunchDescription([
         gazeboLaunch,
         robot_state_publisher,
