@@ -1,0 +1,15 @@
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/ament_index/resource_index/package_run_dependencies/edge_ws
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/ament_index/resource_index/parent_prefix_path/edge_ws
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/environment/ament_prefix_path.sh
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/environment/ament_prefix_path.dsv
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/environment/path.sh
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/environment/path.dsv
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/local_setup.bash
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/local_setup.sh
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/local_setup.zsh
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/local_setup.dsv
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/package.dsv
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/ament_index/resource_index/packages/edge_ws
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/cmake/edge_wsConfig.cmake
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/cmake/edge_wsConfig-version.cmake
+/home/kunal-jazzy/edge_ws/install/edge_ws/share/edge_ws/package.xml

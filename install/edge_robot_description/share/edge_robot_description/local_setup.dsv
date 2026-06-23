@@ -1,2 +1,1 @@
-source;share/edge_robot_description/environment/ament_prefix_path.sh
-source;share/edge_robot_description/environment/path.sh
+/home/kunal-jazzy/edge_ws/build/edge_robot_description/ament_cmake_environment_hooks/local_setup.dsv
