@@ -1,0 +1,476 @@
+<?xml version="1.0"?>
+<robot name="edge_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!--
+      Fixes applied to the uploaded draft:
+      1. xmlns:xacro was "https://..." — the xacro parser only recognizes
+         the "http://www.ros.org/wiki/xacro" namespace. With https, every
+         <xacro:property>/<xacro:macro> tag is silently ignored and the
+         file fails to expand at all. Fixed to http.
+      2. Gazebo-Classic-style named materials ("Gazebo/Red", "Gazebo/Yellow",
+         "Gazebo/Blue") are OGRE1 material-script names. Gazebo Sim's
+         default Ogre2 backend doesn't reliably resolve them, so links can
+         render grey/pink. Replaced with plain rgba <material> colors,
+         which render correctly regardless of engine version.
+      3. Added a second, dedicated LIDAR ("edge_lidar_link"): the original
+         "lidar_link" is a full 3D spinning-style sensor (360 deg
+         horizontal x 16 vertical layers) mounted on top, great for
+         mapping, but it publishes a 3D point cloud, not a LaserScan, so
+         it can't directly drive the existing edge_avoider node (which
+         subscribes to sensor_msgs/LaserScan on /scan). The new
+         edge_lidar_link is a small, front-mounted, ~20 deg
+         downward-tilted single-layer LIDAR publishing a LaserScan on
+         /scan, exactly what bot_script/edge_avoider.py and
+         bot_controller/config/bridge.yaml already expect. The original
+         3D lidar is kept (topic "scan_3d") for future mapping/SLAM use.
+      mu1/mu2 friction tags were left as-is: sdformat's URDF->SDF
+      conversion still translates <gazebo reference="link"><mu1>/<mu2>
+      into <surface><friction><ode> under Gazebo Sim, so they still work.
+      4. Drive wheels moved from the rear axle to the robot's geometric
+         center (x=0), with the two casters split to front and rear
+         center (instead of both up front). With the old rear-axle
+         layout, DiffDrive rotates the robot about that rear axle, so
+         the front corners swept a ~0.9 m arc when turning — enough to
+         carry a corner past a platform edge mid-turn even after the
+         AVOID maneuver's reverse step. Centering the drive wheels
+         shrinks that sweep radius to the chassis's own half-diagonal
+         (~0.58 m), matching standard differential-drive layouts
+         (drive axle through the centroid, casters fore/aft for
+         support) and removing the asymmetric overhang.
+    -->
+
+    <xacro:property name="pi_const" value="3.14159265" />
+
+    <xacro:property name="length" value="1.0"/>
+    <xacro:property name="height" value="0.3"/>
+    <xacro:property name="breadth" value="0.6"/>
+    <xacro:property name="radius" value="0.15"/>
+    <xacro:property name="d" value="0.1"/>
+
+    <xacro:property name="body_z" value="${radius + height/2}"/>
+    <xacro:property name="body_top_z" value="${radius + height}"/>
+    <!-- wheel_x: fore/aft caster offset from center (drive wheels sit
+         at x=0, on the centerline; see the header comment on why). -->
+    <xacro:property name="wheel_x" value="${length/2 - radius}"/>
+    <xacro:property name="wheel_y" value="${breadth/2 + d/2}"/>
+
+    <xacro:property name="density_body" value="2710.0"/>
+    <xacro:property name="density_wheel" value="2710.0"/>
+
+    <xacro:property name="m_body"  value="${density_body*length*breadth*height}"/>
+    <xacro:property name="m_wheel" value="${density_wheel * pi_const * radius * radius * d}"/>
+
+    <xacro:property name="Ix_box" value="${(1.0/12.0)*m_body*(height*height + breadth*breadth)}"/>
+    <xacro:property name="Iy_box" value="${(1.0/12.0)*m_body*(length*length + height*height)}" />
+    <xacro:property name="Iz_box" value="${(1.0/12.0)*m_body*(length*length + breadth*breadth)}"/>
+
+    <xacro:property name="Iz_wheel" value="${0.5*m_wheel*radius*radius}"/>
+    <xacro:property name="I_wheel"  value="${(1.0/12.0)*m_wheel*(3.0*radius*radius + d*d)}"/>
+
+    <xacro:property name="m_lidar"    value="0.5"/>
+    <xacro:property name="Iz_lidar"   value="${0.5*m_lidar*0.1*0.1}"/>
+    <xacro:property name="Ixy_lidar"  value="${(1.0/12.0)*m_lidar*(3.0*0.1*0.1 + 0.2*0.2)}"/>
+
+    <!-- Edge-lidar geometry: mounted low on the front face, tilted
+         ~20 deg down, so on flat ground its beam bounces off the floor
+         a short, predictable distance ahead. Near a drop, that beam
+         no longer hits anything close, so range jumps: that's the edge signal. -->
+    <xacro:property name="edge_lidar_tilt" value="0.35"/>  <!-- ~20 deg -->
+    <xacro:property name="m_edge_lidar" value="0.05"/>
+    <xacro:property name="I_edge_lidar" value="0.00002"/>
+
+    <material name="body_red"><color rgba="0.75 0.1 0.1 1"/></material>
+    <material name="wheel_yellow"><color rgba="0.9 0.8 0.05 1"/></material>
+    <material name="caster_blue"><color rgba="0.1 0.35 0.85 1"/></material>
+    <material name="lidar_dark"><color rgba="0.12 0.12 0.14 1"/></material>
+    <material name="edge_lidar_orange"><color rgba="1.0 0.55 0.05 1"/></material>
+
+    <xacro:macro name="inertia_body">
+        <inertial>
+            <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
+            <mass value="${m_body}"/>
+            <inertia ixx="${Ix_box}" ixy="0.0" ixz="0.0"
+                     iyy="${Iy_box}" iyz="0.0"
+                     izz="${Iz_box}"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="inertia_wheel">
+        <inertial>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <mass value="${m_wheel}"/>
+            <inertia ixx="${I_wheel}"  ixy="0.0" ixz="0.0"
+                     iyy="${Iz_wheel}" iyz="0.0"
+                     izz="${I_wheel}"/>
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="inertia_lidar">
+        <inertial>
+            <origin xyz="0 0 0.05" rpy="0 0 0"/>
+            <mass value="${m_lidar}"/>
+            <inertia ixx="${Ixy_lidar}" ixy="0.0" ixz="0.0"
+                     iyy="${Ixy_lidar}" iyz="0.0"
+                     izz="${Iz_lidar}"/>
+        </inertial>
+    </xacro:macro>
+
+    <!-- ═══════ Corner cliff sensors: downward-facing IR-style
+         single-beam rangefinders, one at each chassis corner, mounted
+         straight to base_link (no separate link needed; a sensor tag
+         can carry its own pose offset within a link).
+
+         Why: the forward LIDAR, however wide its FOV, can only ever
+         look in the direction the robot is facing. At an actual corner
+         of the platform (two edges meeting), turning away from one edge
+         points the chassis straight at the other, a single
+         forward-looking sensor structurally cannot resolve that, which
+         is exactly what caused the robot to oscillate in place instead
+         of escaping. A direct, ground-truth "is there floor right under
+         this corner" reading at all four corners removes the need to
+         infer that from geometry at all; this is also how the
+         original hardware project this reimplements, and most real
+         edge-avoiding robots, actually do it (IR/cliff sensors under
+         each corner, not a single forward rangefinder). ═══════ -->
+    <xacro:property name="cliff_x" value="${length/2 - 0.05}"/>
+    <xacro:property name="cliff_y" value="${breadth/2 - 0.05}"/>
+    <xacro:property name="cliff_z" value="-0.03"/>  <!-- ~0.12 m above ground -->
+
+    <xacro:macro name="ir_cliff_sensor" params="name x y topic">
+        <gazebo reference="base_link">
+            <sensor name="${name}" type="gpu_lidar">
+                <pose>${x} ${y} ${cliff_z} 0 ${pi_const/2} 0</pose>
+                <topic>${topic}</topic>
+                <update_rate>20</update_rate>
+                <lidar>
+                    <scan>
+                        <horizontal>
+                            <samples>1</samples>
+                            <resolution>1</resolution>
+                            <min_angle>0</min_angle>
+                            <max_angle>0</max_angle>
+                        </horizontal>
+                    </scan>
+                    <range>
+                        <min>0.01</min>
+                        <max>0.20</max>
+                        <resolution>0.005</resolution>
+                    </range>
+                    <noise>
+                        <type>gaussian</type>
+                        <mean>0.0</mean>
+                        <stddev>0.003</stddev>
+                    </noise>
+                </lidar>
+                <always_on>true</always_on>
+            </sensor>
+        </gazebo>
+    </xacro:macro>
+
+    <link name="base_footprint"/>
+
+    <joint name="base_link_joint" type="fixed">
+        <origin xyz="0 0 ${radius}" rpy="0 0 0"/>
+        <parent link="base_footprint"/>
+        <child  link="base_link"/>
+    </joint>
+
+
+    <link name="base_link">
+        <visual>
+            <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${length} ${breadth} ${height}"/>
+            </geometry>
+            <material name="body_red"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 ${height/2}" rpy="0 0 0"/>
+            <geometry>
+                <box size="${length} ${breadth} ${height}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_body/>
+    </link>
+
+    <gazebo reference="base_link">
+        <mu1>0.2</mu1>
+        <mu2>0.2</mu2>
+    </gazebo>
+
+    <!-- ═══════ 3D mapping LIDAR (unchanged position, kept for future
+         SLAM/mapping use; publishes on "scan_3d") ═══════ -->
+    <link name="lidar_link">
+        <visual>
+            <origin xyz="0 0 0.1" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.2"/>
+            </geometry>
+            <material name="lidar_dark"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0.1" rpy="0 0 0"/>
+            <geometry>
+                <cylinder radius="0.05" length="0.2"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_lidar/>
+    </link>
+
+    <joint name="lidar_joint" type="fixed">
+        <origin xyz="0 0 ${height}" rpy="0 0 0"/>
+        <parent link="base_link"/>
+        <child  link="lidar_link"/>
+    </joint>
+
+    <gazebo reference="lidar_link">
+        <sensor name="lidar_3d" type="gpu_lidar">
+            <topic>scan_3d</topic>
+            <update_rate>10</update_rate>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.14159265</min_angle>
+                        <max_angle>3.14159265</max_angle>
+                    </horizontal>
+                    <vertical>
+                        <samples>16</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-0.26179939</min_angle>
+                        <max_angle>0.26179939</max_angle>
+                    </vertical>
+                </scan>
+                <range>
+                    <min>0.1</min>
+                    <max>100.0</max>
+                    <resolution>0.001</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.01</stddev>
+                </noise>
+            </lidar>
+            <always_on>true</always_on>
+        </sensor>
+    </gazebo>
+
+    <!-- ═══════ Edge-detection LIDAR (new): front-mounted, tilted down,
+         single vertical layer -> publishes sensor_msgs/LaserScan on
+         "/scan", which bot_script/edge_avoider.py and
+         bot_controller/config/bridge.yaml already expect.
+
+         Horizontal FOV widened from the original +/-0.3 rad (~17 deg)
+         to +/-0.6 rad (~34 deg): a chassis corner 0.3 m off centerline
+         sits at ~31 deg off the forward axis by the time it's close
+         enough to matter, so the narrower cone let corners swing over
+         an edge, particularly while curving through EXPLORE's
+         proportional steering, without a single beam ever pointing
+         at the ground they were about to cross. ═══════ -->
+    <link name="edge_lidar_link">
+        <visual>
+            <geometry>
+                <cylinder radius="0.02" length="0.03"/>
+            </geometry>
+            <material name="edge_lidar_orange"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.02" length="0.03"/>
+            </geometry>
+        </collision>
+        <inertial>
+            <mass value="${m_edge_lidar}"/>
+            <inertia ixx="${I_edge_lidar}" ixy="0.0" ixz="0.0"
+                     iyy="${I_edge_lidar}" iyz="0.0"
+                     izz="${I_edge_lidar}"/>
+        </inertial>
+    </link>
+
+    <joint name="edge_lidar_joint" type="fixed">
+        <!-- front-bottom of the chassis, angled down -->
+        <origin xyz="${length/2 - 0.05} 0 0.02" rpy="0 ${edge_lidar_tilt} 0"/>
+        <parent link="base_link"/>
+        <child  link="edge_lidar_link"/>
+    </joint>
+
+    <gazebo reference="edge_lidar_link">
+        <sensor name="edge_lidar" type="gpu_lidar">
+            <topic>scan</topic>
+            <update_rate>15</update_rate>
+            <lidar>
+                <scan>
+                    <horizontal>
+                        <samples>30</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-0.6</min_angle>
+                        <max_angle>0.6</max_angle>
+                    </horizontal>
+                </scan>
+                <range>
+                    <min>0.02</min>
+                    <max>1.0</max>
+                    <resolution>0.005</resolution>
+                </range>
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.005</stddev>
+                </noise>
+            </lidar>
+            <always_on>true</always_on>
+            <visualize>true</visualize>
+        </sensor>
+    </gazebo>
+
+    <xacro:ir_cliff_sensor name="ir_front_left"  x="${cliff_x}"  y="${cliff_y}"  topic="ir_front_left"/>
+    <xacro:ir_cliff_sensor name="ir_front_right" x="${cliff_x}"  y="${-cliff_y}" topic="ir_front_right"/>
+    <xacro:ir_cliff_sensor name="ir_rear_left"   x="${-cliff_x}" y="${cliff_y}"  topic="ir_rear_left"/>
+    <xacro:ir_cliff_sensor name="ir_rear_right"  x="${-cliff_x}" y="${-cliff_y}" topic="ir_rear_right"/>
+
+    <link name="left_wheel_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+            <material name="wheel_yellow"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <joint name="left_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child  link="left_wheel_link"/>
+        <origin xyz="0 ${-wheel_y} 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="50000" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+
+    <gazebo reference="left_wheel_link">
+        <mu1>0.8</mu1>
+        <mu2>0.8</mu2>
+    </gazebo>
+
+    <link name="right_wheel_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+            <material name="wheel_yellow"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <joint name="right_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child  link="right_wheel_link"/>
+        <origin xyz="0 ${wheel_y} 0" rpy="0 0 0"/>
+        <axis xyz="0 1 0"/>
+        <limit effort="50000" velocity="10"/>
+        <dynamics damping="1.0" friction="1.0"/>
+    </joint>
+
+    <gazebo reference="right_wheel_link">
+        <mu1>0.8</mu1>
+        <mu2>0.8</mu2>
+    </gazebo>
+
+    <link name="caster1_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+            <material name="caster_blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <joint name="caster1_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="caster1_link"/>
+        <origin xyz="${wheel_x} 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="caster1_link">
+        <mu1>0.000002</mu1>
+        <mu2>0.000002</mu2>
+    </gazebo>
+
+    <link name="caster2_link">
+        <visual>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+            <material name="caster_blue"/>
+        </visual>
+        <collision>
+            <origin xyz="0 0 0" rpy="1.5707963 0 0"/>
+            <geometry>
+                <cylinder radius="${radius}" length="${d}"/>
+            </geometry>
+        </collision>
+        <xacro:inertia_wheel/>
+    </link>
+
+    <joint name="caster2_joint" type="fixed">
+        <parent link="base_link"/>
+        <child  link="caster2_link"/>
+        <origin xyz="${-wheel_x} 0 0" rpy="0 0 0"/>
+    </joint>
+
+    <gazebo reference="caster2_link">
+        <mu1>0.000002</mu1>
+        <mu2>0.000002</mu2>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="gz-sim-diff-drive-system"
+                name="gz::sim::systems::DiffDrive">
+            <left_joint>left_wheel_joint</left_joint>
+            <right_joint>right_wheel_joint</right_joint>
+            <wheel_separation>${2*wheel_y}</wheel_separation>
+            <wheel_radius>${radius}</wheel_radius>
+            <odom_publish_frequency>20</odom_publish_frequency>
+            <topic>cmd_vel</topic>
+            <odom_topic>odom</odom_topic>
+            <tf_topic>tf</tf_topic>
+            <frame_id>odom</frame_id>
+            <child_frame_id>base_footprint</child_frame_id>
+            <max_linear_acceleration>1.0</max_linear_acceleration>
+        </plugin>
+    </gazebo>
+
+    <gazebo>
+        <plugin filename="gz-sim-joint-state-publisher-system"
+                name="gz::sim::systems::JointStatePublisher">
+            <joint_name>left_wheel_joint</joint_name>
+            <joint_name>right_wheel_joint</joint_name>
+            <topic>joint_states</topic>
+        </plugin>
+    </gazebo>
+
+</robot>
