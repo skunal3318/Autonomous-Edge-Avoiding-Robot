@@ -12,7 +12,7 @@ simulated in ROS 2 Jazzy + Gazebo Sim 8.**
 [![Tests](https://img.shields.io/badge/unit%20tests-27%20passing-brightgreen)](src/bot_script/test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-![Demo](media/demo.gif)
+![Gazebo simulation](images/gazebo.png)
 
 </div>
 
@@ -61,11 +61,10 @@ dangerous.
 ## Demo
 
 <div align="center">
-<img src="media/gazebo-sim.png" width="48%" alt="Gazebo simulation view" />
-<img src="media/rviz-debug.png" width="48%" alt="RViz debug view" />
+<img src="images/rviz.png" width="80%" alt="RViz debug view" />
 </div>
 
-<p align="center"><em>Left: the robot navigating the test platform in Gazebo Sim 8. Right: the RViz debug view — live scan, cliff-sensor status, and hazard map.</em></p>
+<p align="center"><em>The RViz debug view running alongside the simulation — live LIDAR scan, per-corner cliff-sensor status, steering-intent arrow, and the hazard map.</em></p>
 
 ## How It Works
 
