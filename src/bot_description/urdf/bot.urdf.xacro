@@ -1,43 +1,5 @@
 <?xml version="1.0"?>
 <robot name="edge_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
-    <!--
-      Fixes applied to the uploaded draft:
-      1. xmlns:xacro was "https://..." — the xacro parser only recognizes
-         the "http://www.ros.org/wiki/xacro" namespace. With https, every
-         <xacro:property>/<xacro:macro> tag is silently ignored and the
-         file fails to expand at all. Fixed to http.
-      2. Gazebo-Classic-style named materials ("Gazebo/Red", "Gazebo/Yellow",
-         "Gazebo/Blue") are OGRE1 material-script names. Gazebo Sim's
-         default Ogre2 backend doesn't reliably resolve them, so links can
-         render grey/pink. Replaced with plain rgba <material> colors,
-         which render correctly regardless of engine version.
-      3. Added a second, dedicated LIDAR ("edge_lidar_link"): the original
-         "lidar_link" is a full 3D spinning-style sensor (360 deg
-         horizontal x 16 vertical layers) mounted on top, great for
-         mapping, but it publishes a 3D point cloud, not a LaserScan, so
-         it can't directly drive the existing edge_avoider node (which
-         subscribes to sensor_msgs/LaserScan on /scan). The new
-         edge_lidar_link is a small, front-mounted, ~20 deg
-         downward-tilted single-layer LIDAR publishing a LaserScan on
-         /scan, exactly what bot_script/edge_avoider.py and
-         bot_controller/config/bridge.yaml already expect. The original
-         3D lidar is kept (topic "scan_3d") for future mapping/SLAM use.
-      mu1/mu2 friction tags were left as-is: sdformat's URDF->SDF
-      conversion still translates <gazebo reference="link"><mu1>/<mu2>
-      into <surface><friction><ode> under Gazebo Sim, so they still work.
-      4. Drive wheels moved from the rear axle to the robot's geometric
-         center (x=0), with the two casters split to front and rear
-         center (instead of both up front). With the old rear-axle
-         layout, DiffDrive rotates the robot about that rear axle, so
-         the front corners swept a ~0.9 m arc when turning — enough to
-         carry a corner past a platform edge mid-turn even after the
-         AVOID maneuver's reverse step. Centering the drive wheels
-         shrinks that sweep radius to the chassis's own half-diagonal
-         (~0.58 m), matching standard differential-drive layouts
-         (drive axle through the centroid, casters fore/aft for
-         support) and removing the asymmetric overhang.
-    -->
-
     <xacro:property name="pi_const" value="3.14159265" />
 
     <xacro:property name="length" value="1.0"/>
@@ -48,8 +10,6 @@
 
     <xacro:property name="body_z" value="${radius + height/2}"/>
     <xacro:property name="body_top_z" value="${radius + height}"/>
-    <!-- wheel_x: fore/aft caster offset from center (drive wheels sit
-         at x=0, on the centerline; see the header comment on why). -->
     <xacro:property name="wheel_x" value="${length/2 - radius}"/>
     <xacro:property name="wheel_y" value="${breadth/2 + d/2}"/>
 
@@ -70,10 +30,6 @@
     <xacro:property name="Iz_lidar"   value="${0.5*m_lidar*0.1*0.1}"/>
     <xacro:property name="Ixy_lidar"  value="${(1.0/12.0)*m_lidar*(3.0*0.1*0.1 + 0.2*0.2)}"/>
 
-    <!-- Edge-lidar geometry: mounted low on the front face, tilted
-         ~20 deg down, so on flat ground its beam bounces off the floor
-         a short, predictable distance ahead. Near a drop, that beam
-         no longer hits anything close, so range jumps: that's the edge signal. -->
     <xacro:property name="edge_lidar_tilt" value="0.35"/>  <!-- ~20 deg -->
     <xacro:property name="m_edge_lidar" value="0.05"/>
     <xacro:property name="I_edge_lidar" value="0.00002"/>
@@ -114,23 +70,6 @@
         </inertial>
     </xacro:macro>
 
-    <!-- ═══════ Corner cliff sensors: downward-facing IR-style
-         single-beam rangefinders, one at each chassis corner, mounted
-         straight to base_link (no separate link needed; a sensor tag
-         can carry its own pose offset within a link).
-
-         Why: the forward LIDAR, however wide its FOV, can only ever
-         look in the direction the robot is facing. At an actual corner
-         of the platform (two edges meeting), turning away from one edge
-         points the chassis straight at the other, a single
-         forward-looking sensor structurally cannot resolve that, which
-         is exactly what caused the robot to oscillate in place instead
-         of escaping. A direct, ground-truth "is there floor right under
-         this corner" reading at all four corners removes the need to
-         infer that from geometry at all; this is also how the
-         original hardware project this reimplements, and most real
-         edge-avoiding robots, actually do it (IR/cliff sensors under
-         each corner, not a single forward rangefinder). ═══════ -->
     <xacro:property name="cliff_x" value="${length/2 - 0.05}"/>
     <xacro:property name="cliff_y" value="${breadth/2 - 0.05}"/>
     <xacro:property name="cliff_z" value="-0.03"/>  <!-- ~0.12 m above ground -->
@@ -197,8 +136,6 @@
         <mu2>0.2</mu2>
     </gazebo>
 
-    <!-- ═══════ 3D mapping LIDAR (unchanged position, kept for future
-         SLAM/mapping use; publishes on "scan_3d") ═══════ -->
     <link name="lidar_link">
         <visual>
             <origin xyz="0 0 0.1" rpy="0 0 0"/>
@@ -256,18 +193,6 @@
         </sensor>
     </gazebo>
 
-    <!-- ═══════ Edge-detection LIDAR (new): front-mounted, tilted down,
-         single vertical layer -> publishes sensor_msgs/LaserScan on
-         "/scan", which bot_script/edge_avoider.py and
-         bot_controller/config/bridge.yaml already expect.
-
-         Horizontal FOV widened from the original +/-0.3 rad (~17 deg)
-         to +/-0.6 rad (~34 deg): a chassis corner 0.3 m off centerline
-         sits at ~31 deg off the forward axis by the time it's close
-         enough to matter, so the narrower cone let corners swing over
-         an edge, particularly while curving through EXPLORE's
-         proportional steering, without a single beam ever pointing
-         at the ground they were about to cross. ═══════ -->
     <link name="edge_lidar_link">
         <visual>
             <geometry>
