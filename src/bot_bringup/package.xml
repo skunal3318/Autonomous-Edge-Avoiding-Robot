@@ -3,7 +3,7 @@
 <package format="3">
   <name>bot_bringup</name>
   <version>0.1.0</version>
-  <description>Top-level launch files for the edge-avoiding robot simulation</description>
+  <description></description>
   <maintainer email="you@example.com">you</maintainer>
   <license>MIT</license>
 
