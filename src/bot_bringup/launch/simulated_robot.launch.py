@@ -25,13 +25,11 @@ def generate_launch_description():
         'use_rviz', default_value='true',
         description='Launch RViz2 with the scan/TF/state debug view')
 
-    # 1. Start Gazebo Sim 8 with our world
     gz_sim = ExecuteProcess(
         cmd=['gz', 'sim', '-r', world_file],
         output='screen'
     )
 
-    # 2. robot_state_publisher: publishes TF from the URDF + joint_states
     robot_state_publisher = Node(
         package='robot_state_publisher',
         executable='robot_state_publisher',
@@ -39,7 +37,6 @@ def generate_launch_description():
         parameters=[robot_description]
     )
 
-    # 3. Spawn the robot into the running world
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
@@ -51,21 +48,18 @@ def generate_launch_description():
         output='screen'
     )
 
-    # 4. ROS <-> Gazebo bridge (cmd_vel, odom, tf, scan, joint_states, clock)
     bridge = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(bot_controller_dir, 'launch', 'bridge.launch.py')
         )
     )
 
-    # 5. Edge-avoidance behavior node
     edge_avoider = Node(
         package='bot_script',
         executable='edge_avoider',
         output='screen'
     )
 
-    # 6. RViz2 debug view: robot model, TF, /scan, steering marker, state
     rviz = Node(
         package='rviz2',
         executable='rviz2',
