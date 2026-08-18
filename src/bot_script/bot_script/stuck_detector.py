@@ -1,11 +1,3 @@
-"""Detects when the robot is failing to make net progress despite issuing
-motion commands -- the telltale sign of being trapped, e.g. oscillating
-between two edges close enough together that a fixed-duration reactive
-maneuver keeps landing it right back where it started.
-
-Pure Python, no ROS dependency, so it's unit-tested directly
-(see test/test_stuck_detector.py) without spinning up rclpy.
-"""
 from collections import deque
 from dataclasses import dataclass
 
@@ -29,15 +21,12 @@ class StuckDetector:
             self._history.popleft()
 
     def is_stuck(self) -> bool:
-        """True if, over the trailing window, net displacement stayed
-        below `min_displacement` -- i.e. the robot has been moving
-        (commands were non-zero) but not actually getting anywhere."""
         if len(self._history) < 2:
             return False
         oldest = self._history[0]
         newest = self._history[-1]
         if (newest.t - oldest.t) < self.window_sec * 0.8:
-            return False  # not enough history accumulated yet
+            return False 
         dx = newest.x - oldest.x
         dy = newest.y - oldest.y
         displacement = (dx * dx + dy * dy) ** 0.5
