@@ -3,7 +3,7 @@
 <package format="3">
   <name>bot_controller</name>
   <version>0.1.0</version>
-  <description>ROS 2 &lt;-&gt; Gazebo Sim 8 topic bridge configuration for the edge-avoiding robot</description>
+  <description>BRIDGE</description>
   <maintainer email="you@example.com">you</maintainer>
   <license>MIT</license>
 
