@@ -69,13 +69,13 @@ def test_nan_readings_are_ignored():
     ranges[10] = float('nan')
     ranges[11] = float('inf')
     d = analyze_scan(ranges, edge_threshold=0.65)
-    assert not d.danger  # remaining finite readings are all on-floor
+    assert not d.danger 
 
 
 def test_bin_ranges_uses_max_within_sector():
     ranges = [0.1, 0.9, 0.1, 0.1]
     bins = bin_ranges(ranges, num_bins=2)
-    assert bins[0] == 0.9  # first half contains the 0.9 reading
+    assert bins[0] == 0.9  
     assert bins[1] == 0.1
 
 
@@ -118,4 +118,4 @@ def test_is_cliff_true_beyond_threshold():
 
 def test_is_cliff_false_on_floor():
     assert not is_cliff(0.12, threshold=0.2)
-    assert not is_cliff(0.2, threshold=0.2)  # boundary: strict greater-than
+    assert not is_cliff(0.2, threshold=0.2) 
