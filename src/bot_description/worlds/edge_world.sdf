@@ -1,34 +1,12 @@
 <?xml version="1.0" ?>
-<!--
-  ============================================================
-  Indoor Robotics Lab — Edge-Avoiding Robot Test World
-  Gazebo Sim 8 (Harmonic)
-  ============================================================
--->
-
 <sdf version="1.9">
   <world name="indoor_robotics_lab">
-
-    <!-- ══════════════════════════════════════════
-         PHYSICS & SIMULATION SETTINGS
-    ══════════════════════════════════════════ -->
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
       <real_time_update_rate>1000</real_time_update_rate>
     </physics>
 
-    <!-- ══════════════════════════════════════════
-         PLUGINS — order matters, Physics first.
-         gz-sim-sensors-system is mandatory for any sensor to
-         publish (gpu_lidar, camera, IMU all silently produce
-         nothing without it). render_engine=ogre2 is what
-         gpu_lidar needs for ray casting; no separate plugin
-         is required for that (an earlier draft of this world
-         added gz-sim-imu-system believing it was needed for
-         lidar rendering — it isn't, that plugin is unrelated
-         and this robot has no IMU, so it has been left out).
-    ══════════════════════════════════════════ -->
     <plugin filename="gz-sim-physics-system"
             name="gz::sim::systems::Physics"/>
     <plugin filename="gz-sim-user-commands-system"
@@ -41,9 +19,6 @@
     </plugin>
 
 
-    <!-- ══════════════════════════════════════════
-         SCENE (AMBIENT LIGHT / SKY)
-    ══════════════════════════════════════════ -->
     <scene>
       <ambient>0.3 0.3 0.3 1</ambient>
       <background>0.15 0.15 0.18 1</background>
@@ -51,16 +26,10 @@
       <grid>false</grid>
     </scene>
 
-    <!-- ══════════════════════════════════════════
-         GRAVITY
-    ══════════════════════════════════════════ -->
     <gravity>0 0 -9.81</gravity>
     <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
     <atmosphere type="adiabatic"/>
 
-    <!-- ══════════════════════════════════════════
-         OVERHEAD SUN / DIRECTIONAL LIGHT
-    ══════════════════════════════════════════ -->
     <light name="sun" type="directional">
       <pose>0 0 10 0 0 0</pose>
       <cast_shadows>true</cast_shadows>
@@ -75,7 +44,6 @@
       </attenuation>
     </light>
 
-    <!-- Lab overhead lights (4 point lights) -->
     <light name="lab_light_1" type="point">
       <pose>-3.0 2.5 2.8 0 0 0</pose>
       <diffuse>1.0 0.98 0.92 1</diffuse>
@@ -117,7 +85,6 @@
       <cast_shadows>false</cast_shadows>
     </light>
 
-    <!-- Spotlight directly over edge-test platform -->
     <light name="platform_spotlight" type="spot">
       <pose>0 0 2.9 0 0 0</pose>
       <diffuse>1.0 1.0 1.0 1</diffuse>
@@ -136,13 +103,6 @@
     </light>
 
 
-    <!-- ══════════════════════════════════════════════════════
-         LAB STRUCTURE
-         Room: 12 m (X) × 10 m (Y) × 3.2 m (Z)
-         Origin is the center of the room floor.
-    ══════════════════════════════════════════════════════ -->
-
-    <!-- ── FLOOR ───────────────────────────────────────── -->
     <model name="lab_floor">
       <static>true</static>
       <pose>0 0 -0.025 0 0 0</pose>
@@ -164,7 +124,6 @@
       </link>
     </model>
 
-    <!-- Floor grid lines (decorative) -->
     <model name="grid_x1"><static>true</static><pose>0 -4 0.001 0 0 0</pose>
       <link name="l"><visual name="v"><geometry><box><size>12 0.01 0.002</size></box></geometry>
         <material><ambient>0.4 0.4 0.45 1</ambient><diffuse>0.4 0.4 0.45 1</diffuse></material></visual></link></model>
@@ -193,7 +152,6 @@
       <link name="l"><visual name="v"><geometry><box><size>12 0.01 0.002</size></box></geometry>
         <material><ambient>0.4 0.4 0.45 1</ambient><diffuse>0.4 0.4 0.45 1</diffuse></material></visual></link></model>
 
-    <!-- ── CEILING ──────────────────────────────────────── -->
     <model name="lab_ceiling">
       <static>true</static>
       <pose>0 0 3.2 0 0 0</pose>
@@ -209,7 +167,6 @@
       </link>
     </model>
 
-    <!-- ── WALLS ─────────────────────────────────────────── -->
     <model name="wall_north">
       <static>true</static><pose>0 5.0 1.6 0 0 0</pose>
       <link name="l">
@@ -243,8 +200,7 @@
       </link>
     </model>
 
-    <!-- Wall baseboard strips -->
-    <model name="baseboard_north"><static>true</static><pose>0 4.85 0.075 0 0 0</pose>
+   <model name="baseboard_north"><static>true</static><pose>0 4.85 0.075 0 0 0</pose>
       <link name="l"><visual name="v"><geometry><box><size>11.6 0.05 0.15</size></box></geometry>
         <material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual></link></model>
     <model name="baseboard_south"><static>true</static><pose>0 -4.85 0.075 0 0 0</pose>
@@ -258,16 +214,6 @@
         <material><ambient>0.25 0.25 0.28 1</ambient><diffuse>0.25 0.25 0.28 1</diffuse></material></visual></link></model>
 
 
-    <!-- ══════════════════════════════════════════════════════
-         EDGE-AVOIDING TEST PLATFORM
-         Slab: 4.0 x 4.0 x 0.10 m.  Pose centre Z: 0.05
-         -> bottom = 0, top = 0.10 m  (sharp cliff edge here).
-
-         Robot spawn pose (base_footprint = wheel-contact frame):
-           z = platform_top = 0.10 m
-           ros2 run ros_gz_sim create -name edge_robot \
-             -topic robot_description -x 0 -y 0 -z 0.10
-    ══════════════════════════════════════════════════════ -->
     <model name="edge_test_platform">
       <static>true</static>
       <pose>0 0 0.05 0 0 0</pose>
@@ -328,9 +274,6 @@
       </link>
     </model>
 
-    <!-- Deep pit below the platform's edges: makes an unsuccessful
-         edge-avoidance attempt obvious (robot visibly plummets)
-         instead of falling forever into an empty void. -->
     <model name="pit_floor">
       <static>true</static>
       <pose>0 0 -3.0 0 0 0</pose>
@@ -346,12 +289,6 @@
       </link>
     </model>
 
-
-    <!-- ══════════════════════════════════════════════════════
-         LAB FURNITURE & PROPS
-    ══════════════════════════════════════════════════════ -->
-
-    <!-- Workbench -->
     <model name="workbench">
       <static>true</static><pose>-4.5 3.0 0.45 0 0 0</pose>
       <link name="l">
@@ -411,7 +348,6 @@
       </link>
     </model>
 
-    <!-- Storage shelves -->
     <model name="shelf_back">
       <static>true</static><pose>5.4 -3.0 1.0 0 0 0</pose>
       <link name="l">
@@ -469,7 +405,6 @@
       </link>
     </model>
 
-    <!-- Charging station -->
     <model name="charging_station_base">
       <static>true</static><pose>4.5 -4.2 0.3 0 0 0</pose>
       <link name="l">
@@ -487,7 +422,6 @@
       </link>
     </model>
 
-    <!-- Ceiling light fixtures -->
     <model name="light_fixture_1"><static>true</static><pose>-3.0 2.5 3.18 0 0 0</pose>
       <link name="l"><visual name="v"><geometry><box><size>0.5 0.15 0.06</size></box></geometry>
         <material><ambient>1.0 1.0 0.9 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse>
@@ -509,12 +443,10 @@
         <material><ambient>1.0 1.0 0.9 1</ambient><diffuse>1.0 1.0 0.9 1</diffuse>
           <emissive>1.0 1.0 0.85 1</emissive></material></visual></link></model>
 
-    <!-- Cable conduit -->
     <model name="cable_conduit"><static>true</static><pose>-1.5 4.85 1.8 0 0 0</pose>
       <link name="l"><visual name="v"><geometry><box><size>5.0 0.06 0.06</size></box></geometry>
         <material><ambient>0.3 0.3 0.35 1</ambient><diffuse>0.3 0.3 0.35 1</diffuse></material></visual></link></model>
 
-    <!-- Fire extinguisher -->
     <model name="fire_extinguisher"><static>true</static><pose>5.4 -4.5 0.3 0 0 0</pose>
       <link name="l">
         <collision name="c"><geometry><cylinder><radius>0.07</radius><length>0.55</length></cylinder></geometry></collision>
@@ -523,7 +455,6 @@
       </link>
     </model>
 
-    <!-- Door -->
     <model name="door_frame_l"><static>true</static><pose>-0.5 -4.95 1.1 0 0 0</pose>
       <link name="l">
         <collision name="c"><geometry><box><size>0.1 0.1 2.2</size></box></geometry></collision>
@@ -554,10 +485,7 @@
       </link>
     </model>
 
-    <!-- ══════════════════════════════════════════════════════
-         ROBOT SPAWN ZONE MARKER — sits just above the platform
-         top surface (0.10 m), visual reference only.
-    ══════════════════════════════════════════════════════ -->
+    
     <model name="robot_spawn_marker">
       <static>true</static>
       <pose>0 0 0.101 0 0 0</pose>
