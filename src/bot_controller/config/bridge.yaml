@@ -1,5 +1,3 @@
-# ROS 2 <-> Gazebo Sim 8 topic bridge
-# ros_gz_bridge parameter_bridge config, one entry per topic.
 
 - ros_topic_name: "/cmd_vel"
   gz_topic_name: "/cmd_vel"
@@ -25,10 +23,6 @@
   gz_type_name: "gz.msgs.LaserScan"
   direction: GZ_TO_ROS
 
-# Corner cliff sensors (see bot_description/urdf/bot.urdf.xacro): one
-# downward-facing single-beam rangefinder per chassis corner, each its
-# own LaserScan topic so edge_avoider.py can tell exactly which corner
-# lost the floor instead of inferring it from a forward-looking scan.
 - ros_topic_name: "/ir_front_left"
   gz_topic_name: "/ir_front_left"
   ros_type_name: "sensor_msgs/msg/LaserScan"
