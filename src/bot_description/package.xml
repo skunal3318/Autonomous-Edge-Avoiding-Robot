@@ -3,7 +3,7 @@
 <package format="3">
   <name>bot_description</name>
   <version>0.1.0</version>
-  <description>URDF/xacro model, sensors and world for the edge-avoiding robot (Gazebo Sim 8)</description>
+  <description>Description Package</description>
   <maintainer email="you@example.com">you</maintainer>
   <license>MIT</license>
 
