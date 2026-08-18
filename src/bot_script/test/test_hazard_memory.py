@@ -1,13 +1,10 @@
-"""Unit tests for hazard_memory.HazardMemory. No rclpy, no simulator --
-run with `pytest src/bot_script/test/` or `colcon test --packages-select bot_script`.
-"""
 import math
 import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from bot_script.hazard_memory import HazardMemory  # noqa: E402
+from bot_script.hazard_memory import HazardMemory  
 
 
 def test_empty_memory_has_no_repulsion():
@@ -25,9 +22,9 @@ def test_far_away_hazard_has_no_effect():
 
 def test_nearby_hazard_pushes_away():
     mem = HazardMemory()
-    mem.record(1.0, 0.0)  # hazard directly ahead (+x) of the query point
+    mem.record(1.0, 0.0)  
     rx, ry = mem.repulsion(0.0, 0.0, radius=2.0)
-    assert rx < 0.0   # push back toward -x, away from the hazard
+    assert rx < 0.0 
     assert abs(ry) < 1e-9
 
 
@@ -46,7 +43,6 @@ def test_multiple_hazards_combine():
     mem.record(1.0, 0.0)
     mem.record(-1.0, 0.0)
     rx, ry = mem.repulsion(0.0, 0.0, radius=2.0)
-    # symmetric hazards on both sides should roughly cancel out
     assert abs(rx) < 1e-9
     assert abs(ry) < 1e-9
 
