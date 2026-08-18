@@ -1,13 +1,10 @@
-"""Unit tests for scan_utils.analyze_scan(). No rclpy, no simulator --
-run with `pytest src/bot_script/test/` or `colcon test --packages-select bot_script`.
-"""
 import math
 import sys
 import os
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-from bot_script.scan_utils import analyze_scan, bin_ranges, is_cliff  # noqa: E402
+from bot_script.scan_utils import analyze_scan, bin_ranges, is_cliff 
 
 
 def flat_floor_scan(n=20, reading=0.5):
@@ -15,8 +12,6 @@ def flat_floor_scan(n=20, reading=0.5):
 
 
 def edge_ahead_scan(n=20, floor=0.5, edge=1.0):
-    """All bins read floor except the center ones, which read the edge
-    (sensor max range -- nothing in range)."""
     ranges = [floor] * n
     mid = n // 2
     ranges[mid - 1:mid + 1] = [edge, edge]
@@ -53,7 +48,7 @@ def test_edge_on_right_biases_left_without_hard_stop():
     d = analyze_scan(edge_on_right_scan(), edge_threshold=0.65, num_bins=5, center_bins=1)
     assert d.danger
     assert d.strongest_side == 'right'
-    assert d.angular_bias > 0  # positive => steer left (+angular.z)
+    assert d.angular_bias > 0  
 
 
 def test_edge_on_left_biases_right():
@@ -89,11 +84,6 @@ def test_bin_ranges_handles_empty_input():
 
 
 def test_no_return_sector_is_treated_as_edge_not_floor():
-    """Regression test: a sector where every beam is inf/nan (no floor
-    found within sensor range at all -- a clean drop-off) must be
-    flagged as an edge, not read as 0.0 ("floor right here"). This was
-    the actual cause of the robot driving off platform edges: a total
-    no-return sector previously looked identical to solid ground."""
     ranges = [0.5] * 20
     mid = 10
     ranges[mid - 2:mid + 2] = [float('inf')] * 4
@@ -109,7 +99,7 @@ def test_bin_ranges_all_non_finite_sector_is_inf():
 
 
 def test_threshold_boundary_is_strict_greater_than():
-    ranges = [0.65] * 20  # exactly at threshold, not beyond it
+    ranges = [0.65] * 20  
     d = analyze_scan(ranges, edge_threshold=0.65)
     assert not d.danger
     ranges2 = [0.6501] * 20
